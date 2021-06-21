@@ -4,7 +4,7 @@ import GrayImg from '../shared/gray_img';
 import DescriptionWithLink from '../shared/DescriptionWithLink';
 import Form from './form';
 
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, Redirect } from 'react-router-dom';
 
 async function getPlanet(id) {
   let response = await fetch(`http://localhost:3000/api/${id}.json`)
@@ -15,22 +15,21 @@ async function getPlanet(id) {
 const Planet = () => {
 
   // declarando onde fica o state e o método que irá atualizá-lo
-  const [satellites, setSatellite] = useState(
-    []
-  );
-
-  const [planet, setPlanet] = useState(
-    {}
-  );
+  const [satellites, setSatellite] = useState([]);
+  const [planet, setPlanet] = useState({});
+  const [redirect, setRedirect] = useState(false);
 
   // pegando o id do objeto com lista de parâmetros retornado por useParams.
   let { id } = useParams();
   let history = useHistory();
 
   useEffect(() => {
+    // chama a api
     getPlanet(id).then(data => {
       setSatellite(data['satellites']);
       setPlanet(data['data']);
+    }, error => {
+      setRedirect(true);
     })
   }, [planet]) // sem o planet dentro do array tava dando erro!
 
@@ -47,6 +46,10 @@ const Planet = () => {
     title = <h3><u>{planet.name}</u></h3>
   } else {
     title = <h3>{planet.name}</h3>
+  }
+
+  if (redirect) {
+    return <Redirect to="/" />
   }
 
   return (
