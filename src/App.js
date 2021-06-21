@@ -1,10 +1,10 @@
 import React from 'react';
-import Planets from './components/Planets';
+import Routes from './routes'
 
 const App = () => {
   return (
    <>
-     <Planets />
+     <Routes />
    </>
   );
 }
