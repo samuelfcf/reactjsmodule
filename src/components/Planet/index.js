@@ -4,7 +4,9 @@ import GrayImg from '../shared/gray_img';
 import DescriptionWithLink from '../shared/DescriptionWithLink';
 import Form from './form';
 
-async function getSatellites(id) {
+import { useParams } from 'react-router-dom';
+
+async function getPlanet(id) {
   let response = await fetch(`http://localhost:3000/api/${id}.json`)
   let data = response.json();
   return data;
@@ -18,36 +20,44 @@ async function getSatellites(id) {
   })
 } */
 
-const Planet = (props) => {
+const Planet = () => {
 
   // declarando onde fica o state e o método que irá atualizá-lo
   const [satellites, setSatellite] = useState(
     []
   );
 
+  const [planet, setPlanet] = useState(
+    {}
+  );
+
+  // pegando o id do objeto com lista de parâmetros retornado por useParams.
+  let { id } = useParams();
+
   
   useEffect(() => {
-    getSatellites(props.id).then(data => {
-      setSatellite(data['satellites'])
+    getPlanet(id).then(data => {
+      setSatellite(data['satellites']);
+      setPlanet(data['data']);
     })
-  }, [props]) // sem o props dentro do array tava dando erro!
+  }, [planet]) // sem o planet dentro do array tava dando erro!
 
   const addSat = (new_sat) => {
     setSatellite([...satellites, new_sat]);
   }
 
   let title;
-  if (props.title_with_underline) {
-    title = <h3><u>{props.name}</u></h3>
+  if (planet.title_with_underline) {
+    title = <h3><u>{planet.name}</u></h3>
   } else {
-    title = <h3>{props.name}</h3>
+    title = <h3>{planet.name}</h3>
   }
 
   return (
     <div>
       {title}
-      <DescriptionWithLink description={props.description} link={props.link} />
-      <GrayImg img_url={props.img_url} gray={props.gray} />
+      <DescriptionWithLink description={planet.description} link={planet.link} />
+      <GrayImg img_url={planet.img_url} gray={planet.gray} />
 
       <h4>Satélites</h4>
       <ul>
