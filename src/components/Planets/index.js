@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Planet from "./planet";
+import Form from "./Form";
 
 // acessando dados da API
 async function getPlanets() {
@@ -42,9 +43,15 @@ const Planets = () => {
     setPlanets([...planets, lastPlanet]);
   };
 
+  const addPlanets = (new_planet) => {
+    setPlanets([...planets, new_planet]);
+  }
+
   return (
     <>
       <h3>Planet List</h3>
+      <hr />
+      <Form addPlanet={addPlanets} />
       <button onClick={removeLast}>remove last</button>
       <button onClick={duplicateLastPlanet}>duplcate last</button>
       <hr />
