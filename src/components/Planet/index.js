@@ -4,21 +4,13 @@ import GrayImg from '../shared/gray_img';
 import DescriptionWithLink from '../shared/DescriptionWithLink';
 import Form from './form';
 
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 async function getPlanet(id) {
   let response = await fetch(`http://localhost:3000/api/${id}.json`)
   let data = response.json();
   return data;
 }
-
-/* componentDidMount() {
-  getSatellites(this.props.id).then(data => {
-    this.setState(state => ({
-      satellites: data['satellites']
-    }))
-  })
-} */
 
 const Planet = () => {
 
@@ -33,14 +25,18 @@ const Planet = () => {
 
   // pegando o id do objeto com lista de parâmetros retornado por useParams.
   let { id } = useParams();
+  let history = useHistory();
 
-  
   useEffect(() => {
     getPlanet(id).then(data => {
       setSatellite(data['satellites']);
       setPlanet(data['data']);
     })
   }, [planet]) // sem o planet dentro do array tava dando erro!
+
+  const goToHome = () => {
+    history.push('/')
+  }
 
   const addSat = (new_sat) => {
     setSatellite([...satellites, new_sat]);
@@ -69,6 +65,7 @@ const Planet = () => {
       <Form addSat={addSat}/>
 
       <hr />
+      <button type="button" onClick={goToHome}>Voltar a listagem</button>
     </div>
   );
 
